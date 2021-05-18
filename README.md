@@ -72,7 +72,7 @@ All things inside this repository started from [playbook](playbook/) directory.
 
 - Usages
 ```
-$ ANSIBLE_CONFIG=~/reusable-roles-ansible/config/config-prod.ini ansible-playbook ~/reusable-roles-ansible/playbook/production/example.yml --extra-var="host=testing"
+$ ANSIBLE_CONFIG=~/ansible-reusable-roles/config/config-prod.ini ansible-playbook ~/ansible-reusable-roles/playbook/production/example.yml --extra-var="host=testing"
 ```
 
 ## Roles

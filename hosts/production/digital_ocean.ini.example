@@ -1,3 +1,3 @@
 [digital_ocean]
-cache_path = /your-path/reusable-roles-ansible/config/tmp
+cache_path = /your-path/ansible-reusable-roles/config/tmp
 use_private_network = True
