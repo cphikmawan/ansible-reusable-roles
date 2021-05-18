@@ -11,8 +11,8 @@
   - node-exporter
   - jmx-exporter
   - mongodb-exporter)
-- kafka
-- zookeeper
+- apache-kafka
+- apache-zookeeper
 - java11
 - setdatetime
 - unzip
