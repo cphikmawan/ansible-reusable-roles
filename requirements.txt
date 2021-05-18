@@ -1,0 +1,8 @@
+ansible==2.8.5
+apache-libcloud==2.6.0
+boto==2.49.0
+boto3==1.10.9
+botocore==1.13.9
+google-auth==1.6.3
+pre-commit==1.20.0
+requests==2.22.0

@@ -1,0 +1,43 @@
+- name: Check exporter version path status
+  stat:
+    path: "{{ app_path }}-{{ jmx_exporter_version }}"
+  register: exporter_ver_dir
+
+- name: Create version path
+  file:
+    dest: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ app_path }}-{{ jmx_exporter_version }}"
+  when: exporter_ver_dir.stat.exists == false
+
+- name: Copy config file
+  template:
+    src: "{{ template_path }}/{{ exporter_name }}.conf"
+    dest: "{{ default_path }}/config.yml"
+  tags: [ exporter, install ]
+
+- name: Add exporter
+  get_url:
+    url: https://repo1.maven.org/maven2/io/prometheus/jmx/jmx_prometheus_javaagent/{{ jmx_exporter_version }}/jmx_prometheus_javaagent-{{ jmx_exporter_version }}.jar
+    dest: "{{ app_path }}-{{ jmx_exporter_version }}"
+  when: exporter_ver_dir.stat.exists == false
+
+- name: Get current path status
+  stat:
+    path: "{{ current_path }}"
+  register: current_dir
+
+- name: Delete if current path link exist
+  file:
+    path: "{{ current_path }}"
+    state: absent
+  when: current_dir.stat.islnk is defined and current_dir.stat.islnk and exporter_ver_dir.stat.exists == false
+
+- name: Create new link
+  file:
+    src: "{{ app_path }}-{{ jmx_exporter_version }}"
+    dest: "{{ current_path }}"
+    state: link
+    force: true
+  when: exporter_ver_dir.stat.exists == false

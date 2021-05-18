@@ -1,0 +1,38 @@
+- name: Check exporter version path status
+  stat:
+    path: "{{ app_path }}-{{ mongodb_exporter_version }}.{{ os_architecture }}"
+  register: exporter_ver_dir
+
+- name: Create version path
+  file:
+    dest: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ app_path }}-{{ mongodb_exporter_version }}.{{ os_architecture }}"
+  when: exporter_ver_dir.stat.exists == false
+
+- name: Add exporter
+  unarchive:
+    src: https://github.com/percona/{{ exporter_name }}/releases/download/v{{ mongodb_exporter_version }}/{{ exporter_name }}-{{ mongodb_exporter_version }}.{{ os_architecture }}.tar.gz
+    dest: "{{ default_path }}/{{ exporter_name }}-{{ mongodb_exporter_version }}.{{ os_architecture }}"
+    remote_src: yes
+  when: exporter_ver_dir.stat.exists == false
+
+- name: Get current path status
+  stat:
+    path: "{{ current_path }}"
+  register: current_dir
+
+- name: Delete if current path link exist
+  file:
+    path: "{{ current_path }}"
+    state: absent
+  when: current_dir.stat.islnk is defined and current_dir.stat.islnk and exporter_ver_dir.stat.exists == false
+
+- name: Create new link
+  file:
+    src: "{{ app_path }}-{{ mongodb_exporter_version }}.{{ os_architecture }}"
+    dest: "{{ current_path }}"
+    state: link
+    force: true
+  when: exporter_ver_dir.stat.exists == false

@@ -1,0 +1,78 @@
+---
+- name: Check zookeeper dir status
+  stat:
+    path: '{{ zookeeper_path }}'
+  register: zookeeper_status
+  tags: zookeeper-install
+
+- name: Download zookeeper to server
+  unarchive:
+    src: 'https://archive.apache.org/dist/zookeeper/zookeeper-{{ zookeeper_version }}/{{ app_name }}-{{ zookeeper_version }}-bin.tar.gz'
+    dest: /opt
+    remote_src: yes
+    owner: '{{ ansible_user_id }}'
+    group: '{{ ansible_user_id }}'
+  when: ansible_distribution == 'Ubuntu' and zookeeper_status.stat.exists == false
+  register: zookeeper_dir_name
+  tags: zookeeper-install
+
+- name: Rename zookeeper dir
+  command: 'mv {{ opt_path }}/{{ app_name }}-{{ zookeeper_version }}-bin {{ zookeeper_path }}'
+  when: ansible_distribution == 'Ubuntu' and zookeeper_status.stat.exists == false
+  tags: zookeeper-install
+
+- name: Add zookeeper data and log path
+  file:
+    path: '{{ item }}'
+    state: directory
+    recurse: yes
+    owner: '{{ ansible_user_id }}'
+    group: '{{ ansible_user_id }}'
+  loop:
+    - '{{ zookeeper_log_path }}'
+    - '{{ zookeeper_data_path }}'
+  tags: zookeeper-install
+
+- name: Fix permission for opt
+  file:
+    path: '{{ opt_path }}'
+    owner: '{{ ansible_user_id }}'
+    group: '{{ ansible_user_id }}'
+    recurse: yes
+  when: ansible_distribution == 'Ubuntu'
+  tags: zookeeper-install
+
+- name: Copy zookeeper configuration to server
+  template:
+    src: '{{ template_path }}/zookeeper.conf'
+    dest: '{{ supervisor_conf_path }}/zookeeper.conf'
+  tags: zookeeper-conf
+  notify: 'restart supervisorctl zookeeper'
+
+- name: Copy java env
+  template:
+    src: '{{ template_path }}/java.env'
+    dest: '{{ zookeeper_conf_path }}/java.env'
+    owner: '{{ ansible_user_id }}'
+    group: '{{ ansible_user_id }}'
+  tags: zookeeper-conf
+  notify: 'restart supervisorctl zookeeper'
+
+- name: Copy myid
+  template:
+    src: '{{ template_path }}/myid'
+    dest: '{{ zookeeper_data_path }}/myid'
+    owner: '{{ ansible_user_id }}'
+    group: '{{ ansible_user_id }}'
+  tags: zookeeper-conf
+  when: "'dev' not in inventory_hostname"
+  notify: 'restart supervisorctl zookeeper'
+
+- name: Copy zookeeper config file
+  template:
+    src: '{{ template_path }}/zoo.cfg'
+    dest: '{{ zookeeper_conf_path }}/zoo.cfg'
+    owner: '{{ ansible_user_id }}'
+    group: '{{ ansible_user_id }}'
+  tags: zookeeper-conf
+  notify: 'restart supervisorctl zookeeper'

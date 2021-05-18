@@ -1,0 +1,28 @@
+---
+- name: Get exporter default path status
+  stat:
+    path: "{{ default_path }}"
+  register: exporter_dir
+  tags: [ exporter, install ]
+
+- name: Create default path
+  file:
+    dest: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ default_path }}"
+  when: exporter_dir.stat.exists == false
+  tags: [ exporter, install ]
+
+- name: Include exporter task
+  include_tasks: "{{ exporter_name }}.yml"
+  when: exporter_name is defined
+  tags: [ exporter, install ]
+
+- name: Add exporter supervisor conf
+  template:
+    src: "{{ template_path }}/{{ exporter_name }}.conf"
+    dest: "{{ supervisor_conf_path }}/{{ exporter_name }}.conf"
+  tags: [ exporter, install ]
+  when: exporter_name != 'jmx_exporter'
+  notify: "restart supervisorctl"

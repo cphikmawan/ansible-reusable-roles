@@ -1,0 +1,23 @@
+- name: Install supervisord using apt
+  apt:
+    name: supervisor
+    state: present
+    update_cache: yes
+  tags: [ supervisor, ubuntu ]
+
+- name: Copy supervisor configuration
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  with_items:
+    - { src: '{{ template_path }}/supervisord.conf', dest: '{{ conf_path }}/supervisord.conf' }
+    - { src: '{{ template_path }}/supervisord.service.j2', dest: '{{ systemd_path }}/supervisor.service' }
+  tags: [ supervisor, ubuntu, config ]
+  notify: "restart supervisor"
+
+- name: Start supervisor on server
+  systemd:
+    name: supervisor
+    state: started
+    enabled: yes
+  tags: [ supervisor, ubuntu ]

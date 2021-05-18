@@ -1,0 +1,12 @@
+---
+- name: Reread supervisorctl
+  supervisorctl:
+    name: "{{ exporter_name }}"
+    state: present
+  listen: 'restart supervisorctl'
+
+- name: Restart supervisorctl
+  supervisorctl:
+    name: "{{ exporter_name }}"
+    state: restarted
+  listen: 'restart supervisorctl'

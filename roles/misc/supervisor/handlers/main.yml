@@ -1,0 +1,7 @@
+---
+- name: Restart supervisor on server
+  systemd:
+    name: supervisor
+    state: restarted
+    enabled: yes
+  listen: "restart supervisor"

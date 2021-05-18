@@ -1,0 +1,6 @@
+---
+- name: Install unzip
+  apt:
+    update_cache: yes
+    name: unzip
+  tags: unzip-install

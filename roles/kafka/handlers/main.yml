@@ -1,0 +1,6 @@
+---
+- name: Restart supervisorctl kafka
+  supervisorctl:
+    name: kafka
+    state: restarted
+  listen: 'restart supervisorctl kafka'

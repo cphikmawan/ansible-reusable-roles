@@ -1,0 +1,13 @@
+# env
+environment: production
+
+# vault
+vault_file: ../../vault/production.vault
+
+# zookeeper
+zookeeper1: 'zookeeper1'
+zookeeper2: 'zookeeper2'
+zookeeper3: 'zookeeper3'
+
+# supervisor
+supervisor_log_dir: /var/log/supervisor

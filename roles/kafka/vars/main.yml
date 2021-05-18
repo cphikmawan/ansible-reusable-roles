@@ -1,0 +1,8 @@
+app_name: kafka
+opt_path: /opt
+kafka_path: /opt/kafka
+kafka_log_path: /opt/kafka/logs
+kafka_conf_path: /opt/kafka/config
+template_path: ../../templates/kafka
+supervisor_conf_path: /etc/supervisor/conf.d
+supervisor_log_path: /var/log/supervisor

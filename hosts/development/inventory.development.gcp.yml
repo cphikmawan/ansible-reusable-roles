@@ -1,0 +1,10 @@
+plugin: gcp_compute
+projects:
+  - development-project-id
+hostnames:
+  - name
+keyed_groups:
+   - key: labels.service_name
+compose:
+   ansible_host: networkInterfaces[0].networkIP
+auth_kind: serviceaccount

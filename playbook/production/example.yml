@@ -1,0 +1,13 @@
+- name: Example
+  hosts: "{{ host }}"
+  become: yes
+  vars_files:
+    - "{{ vault_file }}"
+  roles:
+    # misc
+    - misc/supervisor
+    - misc/setdatetime
+    - misc/unzip
+    # exporter
+    - role: exporter
+      exporter_name: node_exporter

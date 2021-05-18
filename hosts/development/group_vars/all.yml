@@ -1,0 +1,5 @@
+# env
+environment: development
+
+# vault
+vault_file: ../../vault/development.vault

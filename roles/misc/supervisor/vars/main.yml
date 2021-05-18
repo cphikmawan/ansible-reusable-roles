@@ -1,0 +1,5 @@
+template_path: "../../templates/supervisor"
+conf_path: "/etc/supervisor"
+systemd_path: "/lib/systemd/system"
+supervisor_conf_path: "/etc/supervisor/conf.d"
+binary_path: "/usr/bin"

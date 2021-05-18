@@ -1,0 +1,50 @@
+# KAFKA
+kafka_conf: |
+    [program:kafka]
+    command={{ kafka_path }}/bin/kafka-server-start.sh {{ kafka_path }}/config/server.properties
+    environment=
+        KAFKA_OPTS="-javaagent:/opt/jmx-exporter/current/jmx_prometheus_javaagent-0.3.1.jar=2000{{ ansible_hostname | regex_search('\d') }}:/opt/jmx-exporter/config.yml"
+    process_name=%(program_name)s
+    numprocs=1
+    directory={{ kafka_path }}
+    umask=022
+    priority=1
+    user={{ ansible_user_id }}
+    group={{ ansible_user_id }}
+    autostart=true
+    autorestart=true
+    startsecs=1
+    startretries=1
+    exitcodes=0,2
+    stopsignal=TERM
+    stopwaitsecs=60
+    serverurl=AUTO
+    redirect_stderr=true
+    stdout_logfile={{ supervisor_log_path }}/kafka.log
+    stdout_logfile_maxbytes=1MB
+    stdout_logfile_backups=10
+    stdout_capture_maxbytes=1MB
+
+server_properties_config: |
+    broker.id={{ ansible_hostname | regex_search('\d') }}
+    port=9092
+    advertised.host.name={{ ansible_eth1.ipv4.address }}
+    num.network.threads=30
+    num.io.threads=80
+    socket.send.buffer.bytes=102400
+    socket.receive.buffer.bytes=102400
+    socket.request.max.bytes=104857600
+    log.dirs={{ kafka_log_path }}
+    num.partitions=3
+    num.recovery.threads.per.data.dir=4
+    offsets.topic.replication.factor=3
+    transaction.state.log.replication.factor=3
+    transaction.state.log.min.isr=1
+    log.retention.hours=168
+    log.segment.bytes=1073741824
+    log.retention.check.interval.ms=300000
+    zookeeper.connect={{ zookeeper1 }}:2181,{{ zookeeper2 }}:2181,{{ zookeeper3 }}:2181
+    zookeeper.connection.timeout.ms=6000
+    delete.topic.enable=true
+    group.initial.rebalance.delay.ms=0
+    auto.create.topics.enable=true

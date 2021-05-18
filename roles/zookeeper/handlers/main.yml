@@ -1,0 +1,6 @@
+---
+- name: Restart supervisorctl zookeeper
+  supervisorctl:
+    name: zookeeper
+    state: restarted
+  listen: 'restart supervisorctl zookeeper'

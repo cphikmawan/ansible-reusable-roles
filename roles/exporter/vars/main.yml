@@ -1,0 +1,6 @@
+default_path: "/opt/{{ exporter_name | replace('_','-')}}"
+template_path: "../../templates/exporter"
+supervisor_conf_path: "/etc/supervisor/conf.d"
+os_architecture: "linux-amd64"
+app_path: "{{ default_path }}/{{ exporter_name }}"
+current_path: "{{ default_path }}/current"

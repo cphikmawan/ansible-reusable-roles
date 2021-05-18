@@ -1,0 +1,39 @@
+zookeeper_conf: |
+    [program:zookeeper]
+    command={{ zookeeper_path }}/bin/zkServer.sh start-foreground
+    process_name=%(program_name)s
+    numprocs=1
+    directory={{ zookeeper_path }}
+    umask=022
+    priority=1
+    user={{ ansible_user_id }}
+    group={{ ansible_user_id }}
+    autostart=true
+    autorestart=true
+    startsecs=1
+    startretries=1
+    exitcodes=0,2
+    stopsignal=TERM
+    stopwaitsecs=5
+    serverurl=AUTO
+    redirect_stderr=true
+    stdout_logfile={{ supervisor_log_path }}/zookeeper.log
+    stdout_logfile_maxbytes=10MB
+    stdout_logfile_backups=10
+    stdout_capture_maxbytes=10MB
+zookeeper_config: |
+    maxSessionTimeout=5000
+    tickTime=2000
+    initLimit=10
+    syncLimit=5
+    dataDir={{ zookeeper_data_path }}
+    clientPort=2181
+    maxClientCnxns=65536
+    autopurge.purgeInterval=1
+    server.1={{ zookeeper1 }}:2888:3888
+    server.2={{ zookeeper2 }}:2888:3888
+    server.3={{ zookeeper3 }}:2888:3888
+java_env: |
+    export JVMFLAGS="-Xmx1g -Xms1g"
+zookeeper_id: |
+    {{ ansible_hostname | regex_search('\d') }}

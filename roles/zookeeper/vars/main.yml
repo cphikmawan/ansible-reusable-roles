@@ -1,0 +1,9 @@
+app_name: apache-zookeeper
+opt_path: /opt
+zookeeper_path: /opt/zookeeper
+zookeeper_log_path: /opt/zookeeper/logs
+zookeeper_data_path: /opt/zookeeper/data
+zookeeper_conf_path: /opt/zookeeper/conf
+template_path: ../../templates/zookeeper
+supervisor_conf_path: /etc/supervisor/conf.d
+supervisor_log_path: /var/log/supervisor

@@ -1,0 +1,8 @@
+[defaults]
+inventory         = ~/reusable-roles-ansible/hosts/production/digital_ocean.py
+roles_path        = ~/reusable-roles-ansible/roles
+host_key_checking = False
+remote_user       = root
+private_key_file  = /path/to/ssh-keys
+vault_password_file = /path/to/vault_password
+display_skipped_hosts = True

@@ -1,0 +1,16 @@
+[Unit]
+Description=Supervisor process control system for UNIX
+Documentation=http://supervisord.org
+After=network.target
+
+[Service]
+ExecStart={{ binary_path }}/supervisord -n -c {{ conf_path }}/supervisord.conf
+ExecStop={{ binary_path }}/supervisorctl $OPTIONS shutdown
+ExecReload={{ binary_path }}/supervisorctl -c {{ conf_path }}/supervisord.conf $OPTIONS reload
+KillMode=process
+Restart=on-failure
+RestartSec=50s
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target

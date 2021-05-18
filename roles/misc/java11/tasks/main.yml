@@ -1,0 +1,12 @@
+---
+- name: Add java repo
+  apt_repository:
+    repo: ppa:linuxuprising/java
+    state: present
+  tags: java-install
+
+- name: Install java 11
+  apt:
+    update_cache: yes
+    name: openjdk-11-jre-headless
+  tags: java-install

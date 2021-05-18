@@ -1,0 +1,17 @@
+- name: Install Kafka Cluster
+  hosts: "{{ host }}"
+  become: yes
+  vars_files:
+    - "{{ vault_file }}"
+  roles:
+    # misc
+    - misc/supervisor
+    - misc/setdatetime
+    - misc/java11
+    - misc/unzip
+    # exporter
+    - exporter
+    - role: exporter # please run this roles separately
+      exporter_name: jmx_exporter
+    # kafka
+    - kafka
